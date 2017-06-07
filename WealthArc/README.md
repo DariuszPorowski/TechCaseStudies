@@ -1,1 +1,1 @@
-# WealrtArc
+# WealthArc
