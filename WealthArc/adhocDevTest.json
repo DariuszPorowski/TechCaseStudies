@@ -1,0 +1,257 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "sqlServerName": {
+      "type": "string"
+    },
+    "sqlServerAdministratorLogin": {
+      "type": "string"
+    },
+    "sqlServerAdministratorPassword": {
+      "type": "securestring"
+    },
+    "sqlServerVersion": {
+      "type": "string",
+      "defaultValue": "12.0"
+    },
+    "databaseName": {
+      "type": "string"
+    },
+    "databaseRequestedServiceObjectiveName": {
+      "type": "string",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P4",
+        "P6",
+        "P11",
+        "P15",
+        "PRS1",
+        "PRS2",
+        "PRS4",
+        "PRS6"
+      ],
+      "defaultValue": "S0"
+    },
+    "databaseSourceDatabaseRgName": {
+      "type": "string"
+    },
+    "databaseSourceDatabaseServerName": {
+      "type": "string"
+    },
+    "databaseSourceDatabaseName": {
+      "type": "string"
+    },
+    "storageName": {
+      "type": "string"
+    },
+    "storageAccountType": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS"
+      ],
+      "defaultValue": "Standard_LRS"
+    },
+    "storageEncryptionEnabled": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    "webAppName": {
+      "type": "string"
+    },
+    "webAppSku": {
+      "type": "string",
+      "allowedValues": [
+        "Free",
+        "Shared",
+        "Basic",
+        "Standard"
+      ],
+      "defaultValue": "Standard"
+    },
+    "webAppSkuCode": {
+      "type": "string",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "defaultValue": "S1"
+    }
+  },
+  "variables": {
+    "hostingPlanName": "[parameters('webAppName')]",
+    "appInsightName": "[parameters('webAppName')]",
+    "databaseCreateMode": "Copy",
+    "sourceDatabaseId": "[resourceId(parameters('databaseSourceDatabaseRgName'), 'Microsoft.SQL/servers/databases', parameters('databaseSourceDatabaseServerName'), parameters('databaseSourceDatabaseName'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-03-01",
+      "name": "[parameters('webAppName')]",
+      "type": "Microsoft.Web/sites",
+      "properties": {
+        "name": "[parameters('webAppName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      },
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
+      ],
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "type": "config",
+          "name": "connectionstrings",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites/', parameters('webAppName'))]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('Server=tcp:', reference(resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorLogin'), ';Password=', parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+              "type": "Custom"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2016-09-01",
+      "name": "[variables('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[variables('hostingPlanName')]",
+        "numberOfWorkers": "1"
+      },
+      "sku": {
+        "tier": "[parameters('webAppSku')]",
+        "name": "[parameters('webAppSkuCode')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+      ]
+    },
+    {
+      "type": "microsoft.insights/components",
+      "kind": "web",
+      "name": "[variables('appInsightName')]",
+      "apiVersion": "2014-08-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "ApplicationId": "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]",
+        "Application_Type": "web"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites/', parameters('webAppName'))]"
+      ]
+    },
+    {
+      "apiVersion": "2016-01-01",
+      "name": "[parameters('storageName')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
+      },
+      "kind": "Storage",
+      "properties": {
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": "[parameters('storageEncryptionEnabled')]"
+            },
+            "file": null
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      }
+    },
+    {
+      "apiVersion": "2014-04-01",
+      "name": "[parameters('sqlServerName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "administratorLogin": "[parameters('sqlServerAdministratorLogin')]",
+        "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+        "externalAdministratorLogin": null,
+        "externalAdministratorSid": null,
+        "version": "[parameters('sqlServerVersion')]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2014-04-01",
+          "name": "[concat(parameters('sqlServerName'), '/', parameters('databaseName'))]",
+          "location": "[resourceGroup().location]",
+          "properties": {
+            "createMode": "[variables('databaseCreateMode')]",
+            "sourceDatabaseId": "[variables('sourceDatabaseId')]",
+            "requestedServiceObjectiveName": "[parameters('databaseRequestedServiceObjectiveName')]"
+          },
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+          ],
+          "type": "Microsoft.Sql/servers/databases"
+        },
+        {
+          "apiVersion": "2014-04-01",
+          "type": "firewallrules",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+          ],
+          "location": "[resourceGroup().location]",
+          "name": "AllowAllWindowsAzureIps",
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "sqlServerConnectionString": {
+      "type": "string",
+      "value": "[concat('Server=tcp:', reference(resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Persist Security Info=False;User ID=', parameters('sqlServerAdministratorLogin'), ';Password=', parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+    },
+    "databaseConnectionString": {
+      "type": "string",
+      "value": "[concat('Server=tcp:', reference(resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorLogin'), ';Password=', parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+    },
+    "blobServiceEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))).primaryEndpoints.blob]"
+    },
+    "webAppDefaultHostName": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).defaultHostName]"
+    },
+    "webAppOutboundIpAddresses": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).outboundIpAddresses]"
+    },
+    "appInsightsInstrumentationKey": {
+      "type": "string",
+      "value": "[reference(resourceId('microsoft.insights/components', variables('appInsightName'))).InstrumentationKey]"
+    }
+  }
+}
