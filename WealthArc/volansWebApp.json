@@ -1,0 +1,109 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "webAppName": {
+      "type": "string",
+      "minLength": 3
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "B1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ]
+    },
+    "skuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1
+    },
+    "appInsightsLocation": {
+      "type": "string",
+      "defaultValue": "West Europe",
+      "allowedValues": [
+        "East US",
+        "North Europe",
+        "South Central US",
+        "West Europe"
+      ]
+    },
+    "appInsightsType": {
+      "type": "string",
+      "defaultValue": "web",
+      "allowedValues": [
+        "web",
+        "java",
+        "Node.JS",
+        "other"
+      ]
+    }
+  },
+  "variables": {
+    "webAppName": "[toLower(parameters('webAppName'))]",
+    "hostingPlanName": "[variables('webAppName')]",
+    "appInsightsName": "[variables('webAppName')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-09-01",
+      "name": "[variables('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[variables('hostingPlanName')]",
+        "numberOfWorkers": "1"
+      },
+      "sku": {
+        "tier": "[parameters('skuName')]",
+        "name": "[parameters('skuCapacity')]"
+      }
+    },
+    {
+      "apiVersion": "2016-03-01",
+      "name": "[variables('webAppName')]",
+      "type": "Microsoft.Web/sites",
+      "properties": {
+        "name": "[variables('webAppName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      },
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
+      ],
+      "resources": [
+
+      ]
+    },
+    {
+      "name": "[variables('appInsightsName')]",
+      "type": "microsoft.insights/components",
+      "location": "[parameters('appInsightsLocation')]",
+      "apiVersion": "2014-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+      ],
+      "properties": {
+        "applicationId": "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",
+        "Application_Type": "[parameters('appInsightsType')]"
+      }
+    }
+  ],
+  "outputs": {
+    "appInsightInstrumentationKey": {
+      "type": "string",
+      "value": "[reference(resourceId('microsoft.insights/components', variables('appInsightsName'))).InstrumentationKey]"
+    }
+  }
+}
