@@ -1,0 +1,101 @@
+{
+   "$schema":"http://schemas.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+   "contentVersion":"1.0.0.0",
+   "parameters":{
+      "functionAppName":{
+         "type":"string",
+         "minLength":3,
+         "maxLength":19,
+         "metadata":{
+            "description":"The name of the function app that you wish to create."
+         }
+      }
+   },
+   "variables":{
+      "functionAppName":"[toLower(parameters('functionAppName'))]",
+      "hostingPlanName":"[variables('functionAppName')]",
+      "storageAccountName":"[concat(variables('functionAppName'), 'storage')]",
+      "storageAccountType":"Standard_LRS"
+   },
+   "resources":[
+      {
+         "type":"Microsoft.Storage/storageAccounts",
+         "name":"[variables('storageAccountName')]",
+         "apiVersion":"2016-12-01",
+         "sku":{
+            "name":"[variables('storageAccountType')]"
+         },
+         "location":"[resourceGroup().location]",
+         "kind":"Storage"
+      },
+      {
+         "type":"Microsoft.Web/serverfarms",
+         "apiVersion":"2016-09-01",
+         "kind":"functionapp",
+         "name":"[variables('hostingPlanName')]",
+         "location":"[resourceGroup().location]",
+         "sku":{
+            "name":"Y1",
+            "tier":"Dynamic",
+            "size":"Y1",
+            "family":"Y",
+            "capacity":0
+         },
+         "properties":{
+            "name":"[variables('hostingPlanName')]",
+            "numberOfWorkers":0
+         }
+      },
+      {
+         "apiVersion":"2016-08-01",
+         "type":"Microsoft.Web/sites",
+         "name":"[variables('functionAppName')]",
+         "location":"[resourceGroup().location]",
+         "kind":"functionapp",
+         "properties":{
+            "name":"[variables('functionAppName')]",
+            "serverFarmId":"[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+            "clientAffinityEnabled":false
+         },
+         "resources":[
+            {
+               "apiVersion":"2016-03-01",
+               "name":"appsettings",
+               "type":"config",
+               "dependsOn":[
+                  "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+               ],
+               "properties":{
+                  "AzureWebJobsStorage":"[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-12-01').keys[0].value,';')]",
+                  "AzureWebJobsDashboard":"[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-12-01').keys[0].value,';')]",
+                  "FUNCTIONS_EXTENSION_VERSION":"latest",
+                  "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":"[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-12-01').keys[0].value,';')]",
+                  "WEBSITE_CONTENTSHARE":"[concat(variables('functionAppName'), 'share')]"
+               }
+            }
+         ],
+         "dependsOn":[
+            "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+         ]
+      }
+   ],
+   "outputs":{
+      "functionAppDefaultHostName":{
+         "type":"string",
+         "value":"[reference(resourceId('Microsoft.Web/sites', variables('functionAppName'))).defaultHostName]"
+      },
+      "functionAppOutboundIpAddresses":{
+         "type":"string",
+         "value":"[reference(resourceId('Microsoft.Web/sites', variables('functionAppName'))).outboundIpAddresses]"
+      },
+      "functionApp":{
+         "type":"object",
+         "value":"[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')))]"
+      },
+      "functionAppHostingPlan":{
+         "type":"object",
+         "value":"[reference(resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]"
+      }
+   }
+}
