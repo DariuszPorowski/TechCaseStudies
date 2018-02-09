@@ -1,5 +1,6 @@
 # WealthArc improves the efficiency and quality of its dev teams by adopting DevOps practices
 >Author: [Dariusz Porowski](http://DariuszPorowski.MS/about/)
+>
 >Date: 2017-07-10
 
 This article describes how Microsoft helped WealthArc increase the efficiency of its software development process with a primary focus on planning work, unifying tools and processes across teams, maintaining a high quality of code, and automating dev-test environments to the cloud.
