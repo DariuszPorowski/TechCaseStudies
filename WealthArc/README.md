@@ -1,21 +1,6 @@
----
-layout: post
-title: "WealthArc improves the efficiency and quality of its dev teams by adopting DevOps practices"
-author: "Dariusz Porowski"
-author-link: "http://Strefa.MS"
-#author-image: "./images/authors/dariuszporowski.jpg"
-date: 2017-07-10
-categories: [DevOps]
-color: "blue"
-image: "./images/wealtharc-logo.jpg"
-excerpt: WealthArc wanted to simplify its software development and release processes, consolidate and unify tools for each team, and take the first step toward cloud automation. On DevOps-focused hackfests, Microsoft helped WealthArc save time for nonpure development tasks in several areas by adopting DevOps best practices.
-language: [English]
-verticals: [Banking & Capital Markets]
-geolocation: [Europe]
----
-
 # WealthArc improves the efficiency and quality of its dev teams by adopting DevOps practices
 >Author: [Dariusz Porowski](http://DariuszPorowski.MS/about/)
+>Date: 2017-07-10
 
 This article describes how Microsoft helped WealthArc increase the efficiency of its software development process with a primary focus on planning work, unifying tools and processes across teams, maintaining a high quality of code, and automating dev-test environments to the cloud.
 
@@ -137,7 +122,6 @@ New structure for branches:
 ![New branching strategy](./images/vsts-code-branchstrategy.png)
 
 *Figure 8. New branching strategy*
-
 
 ![Brainstorming](./images/brainstorming.jpg)
 
@@ -342,15 +326,12 @@ Following is the most interesting part of the database clone process that used t
         }
 ```
 
-<br/>
-
 You can find the full ARM template on the [GitHub repository adhocDevTest.json](https://github.com/DariuszPorowski/TechCaseStudies/blob/master/WealthArc/adhocDevTest.json).
 
 ## Conclusion and future directions
 The results of the hackfest were satisfying for WealthArc. We put together their process and raised awareness of DevOps.
 
 We gave WealthArc some recommendations and ideas to consider for the future:
-
 * Keep one code for the web application based on the multi-tenant approach and feature flags.
 * Use Azure Key Vault for improving overall security.
 * Focus more on automating tests such as unit tests and selenium tests.
@@ -358,7 +339,6 @@ We gave WealthArc some recommendations and ideas to consider for the future:
 * Design release management for ad-hoc dev-test environment delivery based on existing ARM template.
 
 Following are a few interesting facts and improvements after the hackfest:
-
 * We reduced the time for ad-hoc dev-test environment delivery (manual work + wait time) from about 6 hours to 15 minutes (automatic process on request).
 * We automated the process for new pull request validation, which reduced the overall time (manual work + wait time) from about 2-4 hours to 15 minutes.
 * We eliminated the "ups factor" from the development process by tokenizing XML files. Now developers are not responsible for configuration setup during dev-test deployment. It reduced the management effort and preparation time from about 30 minutes to zero.
@@ -371,13 +351,11 @@ Following are a few interesting facts and improvements after the hackfest:
 ## Additional resources
 
 For more information about DevOps, see:
-
 * [Guide through the theory and implementation of DevOps](https://www.visualstudio.com/devops)
 * [DevOps at Microsoft](https://www.visualstudio.com/en-us/articles/devopsmsft/overview)
 * [Microsoft - Our DevOps Journey](http://stories.visualstudio.com/devops)
 
 A good starting point for more information about the technologies we used:
-
 * [Visual Studio Team Services documentation](https://www.visualstudio.com/en-us/docs/overview)
 * [Azure App Service documentation](https://docs.microsoft.com/en-us/azure/app-service)
 * [Azure SQL Database documentation](https://docs.microsoft.com/en-us/azure/sql-database)
