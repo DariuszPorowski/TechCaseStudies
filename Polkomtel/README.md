@@ -1,6 +1,28 @@
 ﻿# Not only Lift-and-Shift for Java web application
 This article describes how we run Java Spring Boot web application on Microsoft Azure cloud, what was initially designed to run into an on-premises environment, and how we leverage Platform as a Service (PaaS) services to reduce infrastructure management overhead and increase scalability and reliability.
 
+## Table of Contents
+* [Executive summary](#executive-summary)
+* [Customer profile](#customer-profile)
+* [Key technologies used](#key-technologies-used)
+* [Core team](#core-team)
+* [Problem statement](#problem-statement)
+* [Solution, steps, and delivery](#solution-steps-and-delivery)
+	* [Architecture](#architecture)
+	* [App Service on Linux](#app-service-on-linux)
+	* [Azure SQL Database](#azure-sql-database)
+	* [Azure Blob Storage](#azure-blob-storage)
+	* [Azure Functions & Event Grid](#azure-functions-event-grid)
+	* [DevOps](#devops)
+* [Future work](#future-work)
+	* [Allowing users to log in with their corporate credentials by enabling single sign-on (SSO)](#allowing-users-to-log-in-with-their-corporate-credentials-by-enabling-single-sign-on-sso)
+	* [Increase security and control over keys and passwords](#increase-security-and-control-over-keys-and-passwords)
+	* [Connect search results to business goals with full-text search on files](#connect-search-results-to-business-goals-with-full-text-search-on-files)
+	* [Keep user session data in scalable application](#keep-user-session-data-in-scalable-application)
+	* [Increase network security connections](#increase-network-security-connections)
+* [Conclusion](#conclusion)
+	* [Polkomtel - in their own words](#polkomtel-in-their-own-words)
+
 ## Executive summary
 Together with developers form the Internet and Corporate Systems department in Polkomtel, we have built a Proof of Concept (PoC) solution for Corporate Portal (mainly for HR and PR departments) written in Java Spring Boot framework. Common goals for both sides ware run Web App using PaaS services as possible and learn as much as possible about modern application development and deployment patterns, cloud services, and Microsoft Azure cloud itself.
 
