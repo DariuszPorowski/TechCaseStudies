@@ -12,7 +12,7 @@ This article describes how we run Java Spring Boot web application on Microsoft 
 	* [App Service on Linux](#app-service-on-linux)
 	* [Azure SQL Database](#azure-sql-database)
 	* [Azure Blob Storage](#azure-blob-storage)
-	* [Azure Functions & Event Grid](#azure-functions-event-grid)
+	* [Azure Functions & Event Grid](#azure-functions--event-grid)
 	* [DevOps](#devops)
 * [Future work](#future-work)
 	* [Allowing users to log in with their corporate credentials by enabling single sign-on (SSO)](#allowing-users-to-log-in-with-their-corporate-credentials-by-enabling-single-sign-on-sso)
