@@ -278,8 +278,6 @@ Our implementation for **Uploader** and **Downloader** you can find on repositor
     * [BlobHandler.java](https://github.com/DariuszPorowski/TechCaseStudies/tree/master/Polkomtel/src/Java/utils/BlobHandler.java)
     * [BlobData.java](https://github.com/DariuszPorowski/TechCaseStudies/tree/master/Polkomtel/src/Java/utils/BlobHandler.java)
 
-Hint
-* blob.downloadAttributes();
 
 To learn more about Java and Azure Storage integration follow resources:
 * [Microsoft Azure Storage Library for Java](https://github.com/Azure/azure-storage-java) - This project provides a client library in Java that makes it easy to consume Microsoft Azure Storage services.
