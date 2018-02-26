@@ -1,0 +1,158 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location of services."
+            }
+        },
+        "webAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of Web App."
+            }
+        },
+        "hostingPlanName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of App Service plan."
+            }
+        },
+        "hostingPlanSkuName": {
+            "type": "string",
+            "allowedValues": [
+                "Basic",
+                "Standard"
+            ],
+            "metadata": {
+                "description": "SKU of the App Service plan."
+            }
+        },
+        "hostingPlanSkuCode": {
+            "type": "string",
+            "allowedValues": [
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3"
+            ],
+            "metadata": {
+                "description": "SKU Code of the App Service plan."
+            }
+        },
+        "dockerImageName": {
+            "type": "string",
+            "metadata": {
+                "description": "Docker Image full qualified image name, e.g, youracrname.azurecr.io/repo/image:tag"
+            }
+        },
+        "dockerRegistryUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "FQDN of Docker Registry, e.g, https://youracrname.azurecr.io"
+            }
+        },
+        "dockerRegistryUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Docker Registry username or Service Principal name."
+            }
+        },
+        "dockerRegistryPassword": {
+            "type":"securestring",
+            "metadata": {
+                "description": "Docker Registry password or Service Principal secret."
+            }
+        }
+    },
+    "variables": {
+        "webAppApiVersion": "2016-03-01",
+        "hostingPlanApiVersion": "2016-09-01",
+        "hostingPlanWorkerSize": "0",
+        "dockerImageName": "[concat('DOCKER|',parameters('dockerImageName'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "[variables('webAppApiVersion')]",
+            "name": "[parameters('webAppName')]",
+            "type": "Microsoft.Web/sites",
+            "properties": {
+                "name": "[parameters('webAppName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "DOCKER_CUSTOM_IMAGE_NAME",
+                            "value": "[parameters('dockerImageName')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_URL",
+                            "value": "[parameters('dockerRegistryUrl')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                            "value": "[parameters('dockerRegistryUsername')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                            "value": "[parameters('dockerRegistryPassword')]"
+                        },
+                        {
+                            "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                            "value": "false"
+                        }
+                    ],
+                    "linuxFxVersion": "[variables('dockerImageName')]",
+                    "alwaysOn": true
+                }
+            },
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+            ]
+        },
+        {
+            "apiVersion": "[variables('hostingPlanApiVersion')]",
+            "name": "[parameters('hostingPlanName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[parameters('location')]",
+            "properties": {
+                "name": "[parameters('hostingPlanName')]",
+                "workerSizeId": "[variables('hostingPlanWorkerSize')]",
+                "reserved": true,
+                "numberOfWorkers": "1"
+            },
+            "sku": {
+                "Tier": "[parameters('hostingPlanSkuName')]",
+                "Name": "[parameters('hostingPlanSkuCode')]"
+            },
+            "kind": "linux"
+        }
+    ],
+    "outputs": {
+        "resourceGroupName":{
+            "type":"string",
+            "value":"[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).resourceGroup]"
+        },
+        "webAppDefaultHostName":{
+            "type":"string",
+            "value":"[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).defaultHostName]"
+        },
+        "webAppOutboundIpAddresses":{
+            "type":"string",
+            "value":"[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).outboundIpAddresses]"
+        },
+        "webAppObj": {
+            "type": "object",
+            "value": "[reference(resourceId('Microsoft.Web/sites', parameters('webAppName')))]"
+        },
+        "hostingPlanObj": {
+            "type": "object",
+            "value": "[reference(resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName')))]"
+        }
+    }
+}
