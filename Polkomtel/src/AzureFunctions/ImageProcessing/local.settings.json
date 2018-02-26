@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=plkplmspoc;AccountKey=",
+    "AzureWebJobsDashboard": "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=plkplmspoc;AccountKey=",
+    "WEBSITE_CONTENTSHARE": "plkplmspoc",
+    "STORAGE_ACCOUNT_CS": "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=plkplmspoc;AccountKey=",
+    "THUMB_CONTAINER_NAME": "thumbs",
+    "IMAGE_CONTAINER_NAME": "images",
+    "THUMB_WIDTH": "400",
+    "THUMB_HEIGHT": "300"
+  }
+}
