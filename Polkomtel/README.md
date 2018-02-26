@@ -476,7 +476,7 @@ deleteImageEndpoint="https://plkplmspoc.azurewebsites.net/admin/extensions/Event
 # Create Event Grid event subscription to the Storage Account
 storageAccountId=$(az storage account show --name $storageAccountName --resource-group $rgName --query id --output tsv)
 az eventgrid event-subscription create --name createThumbSub --endpoint $createThumbEndpoint --resource-id $storageAccountId --endpoint-type webhook --included-event-types Microsoft.Storage.BlobCreated --subject-begins-with /blobServices/default/containers/images/blobs/
-az eventgrid event-subscription create --name deleteImageSub --endpoint --resource-id $storageAccountId --endpoint-type webhook --included-event-types Microsoft.Storage.BlobDeleted --subject-begins-with /blobServices/default/containers/images/blobs/
+az eventgrid event-subscription create --name deleteImageSub --endpoint $deleteImageEndpoint --resource-id $storageAccountId --endpoint-type webhook --included-event-types Microsoft.Storage.BlobDeleted --subject-begins-with /blobServices/default/containers/images/blobs/
 ```
 
 Script source code is available on the GitHub [azfuncdeploy02.sh](https://github.com/DariuszPorowski/TechCaseStudies/tree/master/Polkomtel/src/AzureFunctions/azfuncdeploy02.sh).
