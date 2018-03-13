@@ -25,7 +25,7 @@ This article describes how we run Java Spring Boot web application on Microsoft 
 	* [Keep user session data in scalable application](#keep-user-session-data-in-scalable-application)
 	* [Increase network security connections](#increase-network-security-connections)
 * [Conclusion](#conclusion)
-	* [Polkomtel - in their own words](#polkomtel-in-their-own-words)
+	* [Polkomtel - in their own words](#polkomtel---in-their-own-words)
 
 ## Executive summary
 Together with developers form the Internet and Corporate Systems department in Polkomtel, we have built a Proof of Concept (PoC) solution for Corporate Portal (mainly for HR and PR departments) written in Java Spring Boot framework. Common goals for both sides ware run Web App using PaaS services as possible and learn as much as possible about modern application development and deployment patterns, cloud services, and Microsoft Azure cloud itself.
