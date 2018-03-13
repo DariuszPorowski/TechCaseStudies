@@ -1,4 +1,8 @@
 ﻿# Not only Lift-and-Shift for Java web application
+>Author: [Dariusz Porowski](http://DariuszPorowski.MS/about/)
+>
+>Date: 2018-02-26
+
 This article describes how we run Java Spring Boot web application on Microsoft Azure cloud, what was initially designed to run into an on-premises environment, and how we leverage Platform as a Service (PaaS) services to reduce infrastructure management overhead and increase scalability and reliability.
 
 ## Table of Contents
@@ -81,7 +85,7 @@ We started with a discussion about architecture. The Polkomtel team tried to des
 
 At a high level, the entire solution is split into two web applications: Portal for end-user public access, and CMS for Polkomtel's employees.
 
-After whiteboard and brainstorm session e ragged on the following architecture:
+After whiteboard and brainstorm session we agreed on the following PoC architecture:
 
 ![PoC Architecture on Azure](images/pocarchazure.png)
 
