@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<LocalConfiguration>
+   <!--
+    Quadient Inspire configuration sections - omitted for this example
+   -->
+   <Database>
+      <Username>__DB_USERNAME__</Username>
+      <Password>__DB_PASSWORD__</Password>
+      <DriverClassName>__DB_DRIVER__</DriverClassName>
+      <Url>__DB_URL__</Url>
+   </Database>
+   <!--
+    Quadient Inspire configuration sections - omitted for this example
+   -->
+</LocalConfiguration>

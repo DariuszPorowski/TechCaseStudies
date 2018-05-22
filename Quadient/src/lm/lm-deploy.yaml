@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lm-deploy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: lm
+  template:
+    metadata:
+      name: lm
+      labels:
+        app: lm
+        tier: lm
+    spec:
+      containers:
+      - name: lm
+        image: quadientcr.azurecr.io/lm:11.0.0.0-test
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: ssh
+          containerPort: 22
+        - name: lm-9961
+          containerPort: 9961
+        - name: lm-9962
+          containerPort: 9962
+        - name: lm-9963
+          containerPort: 9963
+        env:
+        - name: LIC_URL
+          valueFrom:
+            secretKeyRef:
+              name: lm-lic-secret
+              key: url
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: acr-secret
+      restartPolicy: Always
