@@ -18,7 +18,7 @@ banqUP is a use case for building a small and medium-sized enterprise (SME) bank
 	* [Build and release pipeline for Azure Functions](#build-and-release-pipeline-for-azure-functions)
 * [Conclusion and future directions](#conclusion-and-future-directions)
 	* [Facts and improvements](#facts-and-improvements)
-	* [banqUP - in their own words](#banqup-in-their-own-words)
+	* [banqUP - in their own words](#banqup---in-their-own-words)
 * [Additional resources](#additional-resources)
 
 ## Key technologies used
