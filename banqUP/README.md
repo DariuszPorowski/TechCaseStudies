@@ -7,7 +7,21 @@ Microsoft and banqUP worked together to design and implement a platform to help 
 
 banqUP is a use case for building a small and medium-sized enterprise (SME) bank that is vertical/industry-wise. This is our use case for the platform.
 
-**Key technologies used:**
+## Table of Contents
+* [Key technologies used](#key-technologies-used)
+* [Core team](#core-team)
+* [Customer profile](#customer-profile)
+* [Problem statement](#problem-statement)
+* [Solution, steps, and delivery](#solution-steps-and-delivery)
+	* [Architecture](#architecture)
+	* [Value Stream Mapping](#value-stream-mapping)
+	* [Build and release pipeline for Azure Functions](#build-and-release-pipeline-for-azure-functions)
+* [Conclusion and future directions](#conclusion-and-future-directions)
+	* [Facts and improvements](#facts-and-improvements)
+	* [banqUP - in their own words](#banqup-in-their-own-words)
+* [Additional resources](#additional-resources)
+
+## Key technologies used
 * [Visual Studio Team Services](https://www.visualstudio.com/team-services) - Share code, track work, and ship software for any language, all in a single package.
 * [Azure App Service](https://azure.microsoft.com/en-us/services/app-service) - Cloud apps for web front end and Web Jobs as connectors and batch jobs.
 * [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) - Connectors and web hooks for connecting with external services.
@@ -18,7 +32,7 @@ banqUP is a use case for building a small and medium-sized enterprise (SME) bank
 * [Azure Redis Cache](https://docs.microsoft.com/en-us/azure/redis-cache/) - Storing cache information and non-relational data.
 * [Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus/) - Central point of system that communicates all the components in a manageable and safe way for exchanging messages.
 
-**Core team:**
+## Core team
 * [Tomasz Wiśniewski](http://azure.tomaszwisniewski.com) – Technical Evangelist, Microsoft
 * [Dariusz Porowski](http://DariuszPorowski.MS) – Senior Technical Evangelist, Microsoft
 * Krzysztof Pulkiewicz – Chief Executive Officer, banqUP
@@ -61,7 +75,7 @@ We started with a discussion of the current architecture. The banqUP team descri
 
 This activity was useful for getting each hackfest participant on the same page, including those from the banqUP team.
 
-### Value stream mapping
+### Value Stream Mapping
 After the architecture knowledge transfer, we conducted a [value stream mapping](https://en.wikipedia.org/wiki/Value_stream_mapping) (VSM) exercise for the current development and delivery process.
 
 ![Value Stream Mapping](images/vsm.jpg)
