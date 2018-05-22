@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jumphost-deploy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: jumphost
+      labels:
+        app: jumphost
+        tier: jumphost
+    spec:
+      containers:
+      - name: jumphost
+        image: quadientcr.azurecr.io/jumphost:1.0-test
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: ssh
+          containerPort: 22
+      imagePullSecrets:
+      - name: acr-secret
+      restartPolicy: Always

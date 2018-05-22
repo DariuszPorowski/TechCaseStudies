@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cm-deploy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: cm
+  template:
+    metadata:
+      name: cm
+      labels:
+        app: cm
+        tier: cm
+    spec:
+      containers:
+      - name: cm
+        image: quadientcr.azurecr.io/cm:12.0.0.0-test
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: ssh
+          containerPort: 22
+        - name: cm-30353
+          containerPort: 30353
+        env:
+        - name: CX_LIC_SERVER
+          value: lm-svc
+        - name: ICM_PORT
+          value: "30353"
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: cm-db-secret
+              key: dbUsername
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cm-db-secret
+              key: dbPassword
+        - name: DB_DRIVER
+          valueFrom:
+            secretKeyRef:
+              name: cm-db-secret
+              key: dbDriver
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: cm-db-secret
+              key: dbUrl
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: acr-secret
+      restartPolicy: Always

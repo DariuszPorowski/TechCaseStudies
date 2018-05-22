@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cm-svc
+spec:
+  selector:
+    app: cm
+    tier: cm
+  type: LoadBalancer
+  ports:
+  - name: cm-30353
+    protocol: TCP
+    port: 30353
+    targetPort: 30353
